@@ -3,12 +3,14 @@
     <h1 class="pokemonPosts__title">List of all pokemon</h1>
     <div class="pokemonPosts__selectAndSearch">
       <my-search
-        :model-value="searchQuery"
-        @update:model-value="setSearchQuery"
+        :modelValue="searchQuery"
+        @update:modelValue="setSearchQuery"
+
       />
+      <my-button @click="searchPokemon">ok</my-button>
     </div>
     <div class="pokemonPosts__list">
-      <pokemon-list :postsOnPage="searchByInput" />
+      <pokemon-list :postsOnPage="pokemonOnPage" />
     </div>
     <my-paginations :totalPage="totalPage" />
   </div>
@@ -21,6 +23,8 @@ export default {
   components: {
     PokemonList,
   },
+  data: ()=>({
+  }),
   computed: {
     ...mapGetters(["searchByInput"]),
     ...mapState({
@@ -33,13 +37,13 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(["setSearchQuery"]),
+    ...mapMutations(["setSearchQuery","searchPokemon"]),
     ...mapActions(["fetchPokemonOnPage"]),
   },
   async mounted() {
     //делаем вызов нужного количества покемонов на странице
     if (!this.pokemonOnPage.length) {
-      await this.fetchPokemonOnPage(6);
+      await this.fetchPokemonOnPage(3);
     }
   },
 };

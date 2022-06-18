@@ -9,19 +9,20 @@ export default{
         page: JSON.parse(localStorage.getItem('page'))? JSON.parse(localStorage.getItem('page')): 1,
         limitOnPage: JSON.parse(localStorage.getItem('limitOnPage'))? JSON.parse(localStorage.getItem('limitOnPage')): 4,
         totalPage: JSON.parse(localStorage.getItem('totalPage'))? JSON.parse(localStorage.getItem('totalPage')): 1,
-        //данные поиска
+        //для поиска
         searchQuery: '',
-
     }),
-    getters: {
-        // поиск
-        searchByInput(state){
-            return state.pokemonOnPage.filter(post=>{
-                return post.name.toLowerCase().includes(state.searchQuery.toLowerCase())
-            })
-        }
-    },
     mutations: {
+        // логика поиска по клику
+        searchPokemon(state){
+            if(state.searchQuery){
+                state.pokemonOnPage = state.pokemonOnPage.filter(post=>{
+                    return post.name.toLowerCase().includes(state.searchQuery.toLowerCase())
+                })
+            }else{
+                state.pokemonOnPage = JSON.parse(localStorage.getItem('pokemonOnPage'))
+            }
+        },
         //массив со всеми покемонами
         setAllPokemon(state,allPokemon){
             state.allPokemon = allPokemon
@@ -32,16 +33,16 @@ export default{
             localStorage.setItem('allPokemon', JSON.stringify(state.allPokemon))
         },
         //массив с покемонами на одной странице 
-        setPokemonOnPage(state, pokemonOnPage){
-                let start = (state.page - 1) * pokemonOnPage
-                let end = start + pokemonOnPage
+        setPokemonOnPage(state, postsOnPage){
+                let start = (state.page - 1) * postsOnPage
+                let end = start + postsOnPage
                 state.pokemonOnPage = state.allPokemon.slice(start,end)
                 //localStorage
                 localStorage.setItem('pokemonOnPage', JSON.stringify(state.pokemonOnPage))             
         },
         //данные пагинациии
-        setTotalPage(state, pokemonOnPage){
-            state.totalPage = Math.ceil(state.allPokemon.length / pokemonOnPage) 
+        setTotalPage(state, postsOnPage,){
+            state.totalPage = Math.ceil(state.allPokemon.length / postsOnPage) 
             //localStorage
             localStorage.setItem('totalPage', JSON.stringify(state.totalPage)) 
         },
@@ -69,8 +70,6 @@ export default{
                     commit('setAllPokemon',response.data.results)
                     commit('setPokemonOnPage', postsOnPage)
                     commit('setTotalPage',postsOnPage)
-                    //ls
-                    // commit('setLocalStorage',postsOnPage)
                 })
                 .catch(e => console.log(e))
         },    

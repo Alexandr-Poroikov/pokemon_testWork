@@ -37,7 +37,7 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations(["setPage", "setPokemonOnPage"]),
+    ...mapMutations(["setPage", "setPokemonOnPage","setTotalPage"]),
 
     changePrev() {
       if (this.page > 1) {
@@ -51,6 +51,7 @@ export default {
       this.setPage(numberPage);
       //отрисовываем на странице нужные посты(покемонов)
       this.setPokemonOnPage(this.limitOnPage);
+    //   this.setTotalPage()
     },
     changeNext() {
       if (this.page < this.totalPage) {
